@@ -1,0 +1,3 @@
+<?php
+$nodePassword = 'CHANGEME';
+?>
