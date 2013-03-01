@@ -65,7 +65,7 @@ ping -n 3 127.0.0.1 > nul
 		)
 		IF NOT "%FOUNDIP%"=="" (
 			echo Found a new patch at %FOUNDIP%, attempting to patch us...
-			curl -k --user user:turtyeah --digest https://localhost/utilitiesperformUpdate.php?ip=%FOUNDIP%
+			curl -k --user user:turtyeah --digest https://localhost/utilities/performUpdate.php?ip=%FOUNDIP%
 		)
 	)
 	IF "%FOUNDBELNET%"=="" (		

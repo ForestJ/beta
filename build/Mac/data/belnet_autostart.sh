@@ -91,7 +91,7 @@ do
 
 	HASBELNET=`cat output.html | grep "belnet" | awk '{ print length }'`
 
-	UPDATEREQUEST=`cat output.html | grep "update is availiable from" | sed "s:.* \[\([0-9.]*\)\].*:curl -sk --user user\:turtyeah --digest https\://localhost/utilitiesperformUpdate.php?ip=\1:"`
+	UPDATEREQUEST=`cat output.html | grep "update is availiable from" | sed "s:.* \[\([0-9.]*\)\].*:curl -sk --user user\:turtyeah --digest https\://localhost/utilities/performUpdate.php?ip=\1:"`
 	
 	STRLEN=`echo "$UPDATEREQUEST" | awk '{ print length }'`
 	

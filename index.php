@@ -6,7 +6,7 @@ include_once ($_SERVER['DOCUMENT_ROOT']."/includes/version.php");
 include_once ($_SERVER['DOCUMENT_ROOT'].'/includes/databaseConnection.php');
 include_once ($_SERVER['DOCUMENT_ROOT'].'/includes/includedFunctions.php');
 
-$verbose = false;
+$verbose = true;
 $verbage = "";
 $lanIP = "";
 
@@ -76,6 +76,17 @@ while($line = mysql_fetch_array($result, MYSQL_ASSOC)) {
 
 $manualConnect = isset($_GET['manualconnect']) ? $_GET['manualconnect'] : "";
 
+if(mysql_num_rows($result) < 2 || $userip == "" || $manualConnect != "") {
+	if($remoteIsServer) {
+		include('connect.php');
+		exit(0);
+	} else {
+		$pgBody .= "this node has not been set up yet";
+		include("compile.php");
+		exit(0);
+	}
+}
+
 
 $query = 'SELECT * FROM nodes';
 $result = mysql_query($query) or die('Query failed: ' . mysql_error());
@@ -96,7 +107,7 @@ if(time() - $lastNetCheck > 800 || time() - $lastNetCheck < 0 || isset($_GET['ne
 	if($maxVersion > $version) {
 		$updatingHTML = <<< END
 <div>update is availiable from [$maxVersionIP]</div>
-<iframe src="/utilitiesperformUpdate.php?ip=$maxVersionIP"></iframe>
+<iframe src="/utilities/performUpdate.php?ip=$maxVersionIP"></iframe>
 
 END;
 	}

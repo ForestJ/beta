@@ -66,18 +66,23 @@ function perform_update_recurse ($dir, $origdir, $copydir) {
         if($value === '.' || $value === '..') {
 			continue;
 		}
-        if(is_file($origdir."$dir/$value")) {
+		$originalPath = $origdir."$dir/$value";
+		$copyPath = $copydir."$dir/$value";
+		
+        if(is_file($originalPath)) {
 			$totalSeen ++;
 			//echo "file: $origdir"."$dir/$value -> $copydir"."$dir/$value <br>\n";
-			if(!is_file($copydir."$dir/$value") || md5_file($origdir."$dir/$value") != md5_file($copydir."$dir/$value")) {
+			if(!is_file($copyPath) || md5_file($originalPath) != md5_file($copyPath)) {
 				$totalTouched ++;
 				echo "file: $origdir"."$dir/$value -> $copydir"."$dir/$value <br>\n";
-				unlink($copydir."$dir/$value");
-				copy($origdir."$dir/$value", $copydir."$dir/$value");	
+				unlink($copyPath);
+				copy($originalPath, $copyPath);
+				chmod($copyPath, 777);
 			}
 		} else {
 			//echo "folder: $origdir"."$dir/$value -> $copydir"."$dir/$value <br>\n";
-			if(!is_dir($copydir."$dir/$value")) mkdir($copydir."$dir/$value");
+			if(!is_dir($copyPath)) mkdir($copyPath);
+			chmod($copyPath, 777);
 			perform_update_recurse("$dir/$value", $origdir, $copydir);
 		}
     } 

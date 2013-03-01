@@ -11,7 +11,7 @@ if(strstr($lanIP, "144") != false && $conArr[0] != "") {
 
 echo ($preferredId == 0 ? $lanIP : $_SERVER['REMOTE_ADDR']) . ":";
 
-include_once('includes/databaseConnection.php');
+include_once($_SERVER['DOCUMENT_ROOT'].'/includes/databaseConnection.php');
 $query = 'SELECT `ip` FROM ips';
 $result = mysql_query($query) or die('Query failed: ' . mysql_error());	
 $ip = isset($_GET['req']) ? $_GET['req'] : "";
