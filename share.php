@@ -22,7 +22,7 @@ while(isset($_POST["realm$i"])) {
 }
 
 if($hasForm) {
-	mysql_query("DELETE FROM `bfs`.`realms`") or die('Query failed0: ' . mysql_error());
+	mysql_query("DELETE FROM `bfs`.`realms` where 1 = 1") or die('Query failed0: ' . mysql_error());
 	
 	$i = 0;
 	while(isset($_POST["realm$i"])) {

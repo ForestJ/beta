@@ -124,11 +124,14 @@ CREATE TABLE IF NOT EXISTS `posts` (
 END;
 mysql_query($query) or die('Query failed: ' . mysql_error());
 
-foreach($lastRealms as $k => $v) {
-	$q = "INSERT INTO `bfs`.`realms` (`name`, `path`) VALUES ('$k', '$v');";
-	mysql_query($q) or die('Query failed: ' . mysql_error());
-}
 
+$result = mysql_query( "SELECT * FROM `bfs`.`realms`") or die('Query failed: ' . mysql_error());
+if(mysql_num_rows($result) == 0) {
+	foreach($lastRealms as $k => $v) {
+		$q = "INSERT INTO `bfs`.`realms` (`name`, `path`) VALUES ('$k', '$v');";
+		mysql_query($q) or die('Query failed: ' . mysql_error());
+	}
+}
 if(isset($_GET['cleandb']) && array_key_exists('id', $lastUser) && $lastUser['id'] != "") {
 	$q = "INSERT INTO `bfs`.`user` (`id`, `name`, `ip`, `time`, `version`, `updated`) VALUES ('" . $lastUser['id'] . "', '" . $lastUser['name'] . "', '" . $lastUser['ip'] . "', '0', '" . $version . "', 'false');";
 	mysql_query($q) or die('Query failed: ' . mysql_error());
