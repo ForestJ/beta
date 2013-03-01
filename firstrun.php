@@ -13,7 +13,7 @@ $firstrun = <<<END
 <ul>
 <li>you downloaded the belnet distrobution package</li><br>
 
-<li>you ran a setup script which will did the following for you: </li><br>
+<li>you ran a setup script which did the following for you: </li><br>
 <ul>
 <li>install xampp, that is, cross-platform apache, mysql, php, and phpmyadmin. xampp is an easy to use server software bundle that we use. (it was created by <a href="http://www.apachefriends.org/en/index.html">apache friends</a>).</li><br>
 

@@ -55,15 +55,6 @@ $winContentSimple = <<<END
 	</ul>
 </li>
 
-<li><p><span class="hotitem">#2 run "xampp-win32-1.7.7-usb-lite.exe"</span></p>
-	<ul>
-	<li><p> this is an old installer and it will display some warnings about UAC, etc, and windows may announce that the software might not have installed correctly. <span class="hotitem">you can ignore all of these warnings</span></p></li>
-
-	<li><p><span class="hotitem">make sure you install in the default location, C:/xampp,</span> or it won't work.</p></li>
-	</ul>
-
-</li>
-
 <li><p><span class="hotitem">#3 after it installs, run "setup.bat"</span></p>
 
 	<ul>
@@ -92,15 +83,6 @@ $macContentSimple = <<<END
 <li><p>open the Mac folder</p></li>
 </ul>
 </li>
-
-
-<li><p><span class="hotitem">#2 mount and open "xampp-macosx-1.7.3.dmg"</span></p>
-
-	<ul><li><p>install xampp by dragging it to the applications folder alias given inside the dmg</p></li></ul>
-
-</li>
-
-
 
 <li><p><span class="hotitem">#3 run the Setup application</p></span>
 	
