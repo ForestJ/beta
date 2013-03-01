@@ -1,4 +1,4 @@
 <?php
-$version = 0.84;
+$version = 0.85;
 $lastDatabaseReboot = 0.79;
 ?>
