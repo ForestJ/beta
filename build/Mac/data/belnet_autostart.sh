@@ -81,6 +81,8 @@ echo "                                                             "
 
 sleep 3
 
+cd /Applications/XAMPP
+
 while [ 1 -eq 1 ]
 do
 	echo "Updating node..."

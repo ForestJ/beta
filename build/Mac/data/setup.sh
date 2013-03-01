@@ -32,6 +32,8 @@ echo ""
 printf "new password:"
 
 read -s newPW
+echo ""
+echo ""
 
 XAMPP="/Applications/XAMPP"
 
