@@ -49,6 +49,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   `ip` text NOT NULL,
   `name` text NOT NULL,
   `time` int(11) NOT NULL,
+  `session` int(11) NOT NULL,
   `version` text NOT NULL,
   `updated` text NOT NULL,
   PRIMARY KEY (`id`)
@@ -133,7 +134,7 @@ if(mysql_num_rows($result) == 0) {
 	}
 }
 if(isset($_GET['cleandb']) && array_key_exists('id', $lastUser) && $lastUser['id'] != "") {
-	$q = "INSERT INTO `bfs`.`user` (`id`, `name`, `ip`, `time`, `version`, `updated`) VALUES ('" . $lastUser['id'] . "', '" . $lastUser['name'] . "', '" . $lastUser['ip'] . "', '0', '" . $version . "', 'false');";
+	$q = "INSERT INTO `bfs`.`user` (`id`, `name`, `ip`, `time`, `session`, `version`, `updated`) VALUES ('" . $lastUser['id'] . "', '" . $lastUser['name'] . "', '" . $lastUser['ip'] . "', '0', '0', '" . $version . "', 'false');";
 	mysql_query($q) or die('Query failed: ' . mysql_error());
 	
 	$q = "INSERT INTO `bfs`.`nodes` (`id`, `name`, `ip`) VALUES ('" . $lastUser['id']. "', '" . $lastUser['name'] . "', '" . $lastUser['ip'] ."');";

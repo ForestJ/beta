@@ -176,14 +176,10 @@ foreach($displayItems as $item) {
 	$rowStyle = ($i+1 < $length || true ? "row" : "lastRow");
 	$filesHTML .= "<tr><td class='$rowStyle'><div class='rowInnerLeft'><img class='icon1' src='img/" . $item['status'] . ".png'/>";
 	
-	$typeIcon = ($item['download'] == "" ? "type_folder.png" : "type_unknown.png");
-	$typeIcon = preg_match("/^.*\.(jpg|jpeg|png|gif)$/i", $item['name']) ? "type_img.png" : $typeIcon;
-	$typeIcon = preg_match("/^.*\.(mov|flv|m4v|wma|mpg|avi)$/i", $item['name']) ? "type_movie.png" : $typeIcon;
-	$typeIcon = preg_match("/^.*\.(mp3|wav|aiff|mp4|m4a|ogg|flac|wma)$/i", $item['name']) ? "type_music.png" : $typeIcon;
-	$typeIcon = preg_match("/^.*\.(pdf)$/i", $item['name']) ? "type_pdf.png" : $typeIcon;
-	$typeIcon = preg_match("/^.*\.(iso|dmg)$/i", $item['name']) ? "type_disk.png" : $typeIcon;
-	$typeIcon = preg_match("/^.*\.(zip|7z|bz2|tar|rar|sit)$/i", $item['name']) ? "type_zip.png" : $typeIcon;
-	$typeIcon = preg_match("/^.*\.(exe|bat|com)$/i", $item['name']) ? "type_app.png" : $typeIcon;
+	$typeIcon = getTypeIconByFileName($item['name']);
+	
+	if($typeIcon == "type_unknown.png") $typeIcon = ($item['download'] == "" ? "type_folder.png" : "type_unknown.png");
+	
 	$filesHTML .= "&nbsp;&nbsp;<img class='icon1' src='img/$typeIcon'>";
 	
 	if($item['link'] == "") {

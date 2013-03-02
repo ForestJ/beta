@@ -203,6 +203,27 @@ function guessLanIPUsingShell () {
 	return $lanIP;
 }
 
+function getTypeIconByFileName ($name) {
+	$typeIcon = "type_unknown.png";
+	
+	if(preg_match("/^.*\.(jpg|jpeg|png|gif)$/i", $name)) {
+		$typeIcon = "type_img.png";
+	} else if(preg_match("/^.*\.(mov|flv|m4v|wma|mpg|avi)$/i", $name)) {
+		$typeIcon = "type_movie.png";
+	} else if(preg_match("/^.*\.(mp3|wav|aiff|mp4|m4a|ogg|flac|wma)$/i", $name)) {
+		$typeIcon = "type_music.png";
+	} else if(preg_match("/^.*\.(pdf)$/i", $name)) {
+		$typeIcon = "type_pdf.png";
+	} else if(preg_match("/^.*\.(iso|dmg)$/i", $name)) {
+		$typeIcon = "type_disk.png";
+	} else if(preg_match("/^.*\.(zip|7z|bz2|tar|rar|sit)$/i", $name)) {
+		$typeIcon = "type_zip.png";
+	} else if(preg_match("/^.*\.(exe|bat|com)$/i", $name)) {
+		$typeIcon = "type_app.png";
+	}
+	return $typeIcon;
+}
+
 function hasIP ($str) {
 	return preg_match('/\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/', $str);
 }

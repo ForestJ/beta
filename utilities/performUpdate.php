@@ -77,12 +77,12 @@ function perform_update_recurse ($dir, $origdir, $copydir) {
 				echo "file: $origdir"."$dir/$value -> $copydir"."$dir/$value <br>\n";
 				unlink($copyPath);
 				copy($originalPath, $copyPath);
-				chmod($copyPath, 777);
+				chmod($copyPath, 0777);
 			}
 		} else {
 			//echo "folder: $origdir"."$dir/$value -> $copydir"."$dir/$value <br>\n";
 			if(!is_dir($copyPath)) mkdir($copyPath);
-			chmod($copyPath, 777);
+			chmod($copyPath, 0777);
 			perform_update_recurse("$dir/$value", $origdir, $copydir);
 		}
     } 

@@ -151,6 +151,10 @@ if($userip != $serverIP) {
 
 $homeAddr = "https://" . $userip . "/";
 
+$includeJQueryBasic = "<script src=\"".$homeAddr."jquery.js\"></script>";
+$includeJQueryUI = "<link rel=\"stylesheet\" href=\"".$homeAddr."jquery-ui.css\" />"
+		  . "<script src=\"".$homeAddr."jquery-ui.js\"></script>";
+
 $pgFoot .= $updatingHTML;
 
 include($_SERVER['DOCUMENT_ROOT'].'/dash.php');
