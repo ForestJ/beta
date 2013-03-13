@@ -59,32 +59,16 @@ COUNT=`sudo lsof -i -n -P | grep LISTEN | egrep ':80|:443' | wc -l`;
 
 if [ $COUNT -ne 0 ]
 then
-	echo "The following processes are listening on either port 80 or 443 and need to be force-quitted before apache can start."
-	sudo lsof -i -n -P | grep LISTEN | egrep ':80|:443' | sed 's:\([a-zA-Z][0-9a-zA-Z-]*\) *\([0-9]*\).*: - \1 :'
-	echo "  "
-	printf "Do you want to force quit them now? (Y/N): "
-	read yn
+	osascript -e 'tell application "Terminal" to do script "/Applications/XAMPP/xamppfiles/htdocs/build/Mac/data/clear_ports.sh"'
 	
-	if [ $yn = Y ] || [ $yn = y ] 
-	then
-		sudo `sudo lsof -i -n -P | grep LISTEN | egrep ':80|:443' | sed 's:[a-zA-Z][0-9a-zA-Z-]* *\([0-9]*\).*:kill \1 :'`
-		sleep 1
+	COUNT=`sudo lsof -i -n -P | grep LISTEN | egrep ':80|:443' | wc -l`;
+		
+	while [ $COUNT -ne 0 ]
+	do
+		sleep 2
 		COUNT=`sudo lsof -i -n -P | grep LISTEN | egrep ':80|:443' | wc -l`;
-		if [ $COUNT -eq 0 ]
-		then
-			echo "Success! the ports were opened. Apache will start:"
-			sudo /Applications/XAMPP/xamppfiles/xampp enablessl
-			sudo /Applications/XAMPP/xamppfiles/xampp startapache
-			sudo /Applications/XAMPP/xamppfiles/xampp startmysql
-		else
-			echo "apache could not be started. try re-running this script?"
-			exit
-		fi
-	else
-		echo "apache could not be started. try re-running this script?"
-		exit
-	fi
-else
+	done
+	
 	sudo /Applications/XAMPP/xamppfiles/xampp enablessl
 	sudo /Applications/XAMPP/xamppfiles/xampp startapache
 	sudo /Applications/XAMPP/xamppfiles/xampp startmysql
@@ -186,7 +170,10 @@ then
 	
 	echo "installing autostarter..."
 	
-	osascript -e 'tell application "System Events" to make login item at end with properties {path:"/Applications/XAMPP/xamppfiles/htdocs/build/Mac/data/belnet_autostart.app", hidden:false}'
+	sudo cp "$DIR/com.belnet.autostart.plist" "/Library/LaunchDaemons"
+	sudo chown root:wheel /Library/LaunchDaemons/com.belnet.autostart.plist
+	sudo chmod 644 /Library/LaunchDaemons/com.belnet.autostart.plist
+	sudo launchctl load -w /Library/LaunchDaemons/com.belnet.autostart.plist
 	
 	echo "setting up belnet mysql connect..."
 	
