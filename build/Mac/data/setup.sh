@@ -166,7 +166,7 @@ then
 	sudo cp -R "$DIR/../../Windows" "/Applications/XAMPP/xamppfiles/htdocs/build"
 	
 	sudo chgrp -R www "/Applications/XAMPP/xamppfiles/htdocs/"
-	sudo chmod -R 777 "/Applications/XAMPP/xamppfiles/htdocs/"
+	sudo chmod -R 750 "/Applications/XAMPP/xamppfiles/htdocs/"
 	
 	echo "installing autostarter..."
 	
@@ -174,11 +174,17 @@ then
 	sudo chown root:wheel /Library/LaunchDaemons/com.belnet.autostart.plist
 	sudo chmod 644 /Library/LaunchDaemons/com.belnet.autostart.plist
 	sudo launchctl load -w /Library/LaunchDaemons/com.belnet.autostart.plist
-	
+
+	echo "additional configurations to apacheÉ"
+
+	sudo sed 's/User nobody/User www/g' /Applications/XAMPP/xamppfiles/etc/httpd.conf | sed 's/Group nogroup/Group www/g' > /Applications/XAMPP/xamppfiles/etc/httpd.conf
+
+	sudo sed 's/memory_limit = 128M/memory_limit = 1024M/g' /Applications/XAMPP/xamppfiles/etc/php.ini | sed 's/max_execution_time = 30/max_execution_time = 200/g' | sed 'post_max_size = 128M/post_max_size = 1024M/g' > /Applications/XAMPP/xamppfiles/etc/php.ini
+
 	echo "setting up belnet mysql connect..."
 	
 	sudo sed "s/CHANGEME/$newPW/" < "/Applications/XAMPP/xamppfiles/htdocs/includes/nodePassword.php" > "$DIR/nodePassword.php"
-	
+
 	sudo cp "$DIR/nodePassword.php" "/Applications/XAMPP/xamppfiles/htdocs/includes"
 	
 	sudo rm "$DIR/nodePassword.php"

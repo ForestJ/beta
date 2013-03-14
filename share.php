@@ -85,10 +85,73 @@ $shareHTML .= <<<END
 		</div>
 	</div>
 	
+	<div id="pickname" style="display:none;">
+		<div style="width:100%; text-align:center;">
+		<input type="text" name="newname" value="" onchange="validateName(this.value);" onkeypress="this.onchange();" onpaste="this.onchange();" oninput="this.onchange();" /><br>
+		<span style="font-size:0.8em; ">create a short name for your new shared folder. e.g. 'tv' or 'comics'</span>
+		<div id="nameerror"></div>
+		</div>
+	</div>
+	
 	<div id="dialog-modal" title="browse..." style="display:none; font-size:0.8em; ">
 	</div>
 	
 	<script>
+	
+	var picknameContents =  
+	 '	<br><br><br><div style="width:100%; text-align:center;">'
+	+'	<input type="text" id="newname" value="" onchange="validateName(this.value);" onkeypress="this.onchange();" onblur="this.onchange();" onpaste="this.onchange();" oninput="this.onchange();" /><br>'
+	+'	<span style="font-size:0.8em; ">create a short name for your new shared folder. e.g. \'tv\' or \'comics\'<br>'
+	+'	letters, numbers, and .-+ _ are allowed</span>'
+	+'	<br><br><div id="name-error"></div>'
+	+'	</div>';
+	
+	var permsInterval;
+	var permsToCheck;
+	var doubleClickInterval;
+	var folderToDoubleClick;
+	
+		function dialog_choseName(i) {
+			$( "#dialog-modal" ).dialog({
+				height: 450,
+				width: 600,
+				modal: true
+			});
+			$( "#dialog-modal" ).dialog(
+			"option", "buttons", 
+			[ 
+				{ text: "Cancel", click: function() { $( this ).dialog( "close" ); } },
+				{ text: "Next >>", click: function() { 
+						$('#displayrealm'+i).html($('#newname').attr("value"));
+						$('#realm'+i).attr("value", $('#newname').attr("value"));
+						dialog(i);
+					}
+				}
+			]);
+			
+			$( "#dialog-modal" ).html(picknameContents);
+			
+			$('#newname').change(function() {
+ 				validateName($('#newname').attr("value"));
+			});
+			
+			validateName("");
+		}
+	
+		function validateName (name) {
+			$.ajax({
+				url: "utilities/browser.php?cn=t&n="+name
+			}).done(function(data) {
+				if(data == "ok") {
+					$( "#name-error" ).html("");
+					$(":button:contains('Next')").prop("disabled", false).removeClass("ui-state-disabled");
+				} else {
+					$( "#name-error" ).html(data);
+					$(":button:contains('Next')").prop("disabled", true).addClass("ui-state-disabled");
+				}
+			});
+		}
+		
 		function dialog(i) {
 			$( "#dialog-modal" ).dialog({
 				height: 450,
@@ -99,11 +162,27 @@ $shareHTML .= <<<END
 			"option", "buttons", 
 			[ 
 				{ text: "Cancel", click: function() { $( this ).dialog( "close" ); } },
-				{ text: "Share", click: function() { $( this ).dialog( "close" ); } }
+				{ text: "Share", click: function() { 
+						$('#displaypath'+i).html($('#sharepath').html());
+						$('#path'+i).attr("value", $('#sharepath').html());
+						$('#shareform').submit();
+						$( "#dialog-modal" ).dialog({
+							title: "please wait...",
+							height: 150,
+							width: 600,
+							modal: true
+						});
+						$( "#dialog-modal" ).dialog( "option", "buttons",  [ ]); 
+						$( "#dialog-modal" ).html($("#loadingbar").html());
+					}
+				}
 			]);
 			
 			//alert("utilities/browser.php?p="+$( "#path"+i ).attr("value"));
-			loadContentsBasedOnPath($( "#path"+i ).attr("value"));
+			var p = $( "#path"+i ).attr("value");
+			if(p == "") p = "/"
+			
+			loadContentsBasedOnPath(p);
 		}
 		
 		function loadContentsBasedOnPath(path) {
@@ -115,6 +194,12 @@ $shareHTML .= <<<END
 			}).done(function(data) {
 				$( "#dialog-modal" ).html(data);
 				initBrowser();
+				if(data.indexOf("<!--failure-->") == -1) {
+					clearInterval(doubleClickInterval);
+					//alert("clearInterval");
+				} else {
+					startTryingDoubleClick($('#dialogpath').html());
+				}
 			});
 		}
 		
@@ -134,6 +219,7 @@ $shareHTML .= <<<END
 		function dirSelectedOk(tdElement) {
 			$('#shareholder').css('display', 'block');
 			$('#sharepath').html($('#dialogpath').html()+'/'+tdElement.contents("span").html());
+			$('#shareinfo').html(" ");
 			
 			// reset all dirs to default color
 			$("td.dir").css("background", "#ffffff");
@@ -143,6 +229,8 @@ $shareHTML .= <<<END
 			tdElement.css("background", "#1155ff");
 			tdElement.css("color", "#ffffff");
 			
+			clearInterval(permsInterval);
+			
 			// enable share button
 			$(":button:contains('Share')").prop("disabled", false).removeClass("ui-state-disabled");
 		}
@@ -150,8 +238,10 @@ $shareHTML .= <<<END
 		function dirSelectedError(tdElement) {
 			$('#shareholder').css('display', 'block');
 			$('#sharepath').html('');
-			$('#shareinfo').html('"'.tdElement.contents("span").html()+'" is not accessible by apache.<br>'
-								 + 'assuming you are on a Mac, you need to do a "get info" on it and change its permissions.');
+			$('#shareinfo').html('"'+tdElement.contents("span").html()+'" is not accessible by apache.<br>'
+									+'you can <a href="belnetchmod://com.belnet.AppleScript.PermissionsTool?path='
+									+$('#dialogpath').html()+'/'+tdElement.contents("span").html()+'" style="color:#1155ff;">'
+									+'<img src="$docRoot/img/type_shell.png" style="position:relative; top:3px;"></img> launch a command line tool to fix it</a>');
 			
 			// reset all dirs to default color
 			$("td.dir").css("background", "#ffffff");
@@ -163,11 +253,33 @@ $shareHTML .= <<<END
 			
 			// disable share button
 			$(":button:contains('Share')").prop("disabled", true).addClass("ui-state-disabled");
+			
+			clearInterval(permsInterval);
+			permsToCheck = tdElement;
+			permsInterval = setInterval(function(){recheckPerms()},1000);
+
+		}
+		
+		function startTryingDoubleClick(path) {
+			//alert("startTryingDoubleClick");
+			clearInterval(doubleClickInterval);
+			folderToDoubleClick = path;
+			doubleClickInterval = setInterval(function(){recheckDoubleClick()},3000);
+		}
+		
+		function recheckDoubleClick() {
+			loadContentsBasedOnPath(folderToDoubleClick);
+			//alert(folderToDoubleClick);
+		}
+		
+		function recheckPerms() {
+			selectDir(permsToCheck);
 		}
 		
 		function initBrowser () {
-			// enable share button
+			// disable share button
 			$(":button:contains('Share')").prop("disabled", true).addClass("ui-state-disabled");
+			$('#shareinfo').html(" ");
 		
 			// for every directory
 			$("td.dir").css( 'cursor', 'pointer' );
@@ -178,7 +290,7 @@ $shareHTML .= <<<END
 
 	<div style="margin:15px; padding: 10px; background:#ffffff; ">
 	<a style="float:right; margin:5px; padding: 3px 0px 0px 2px; border:2px dashed #dddddd;" href="?t=fs"><img border="0" src="img/close.png"></img></a>
-	<form name="sharepath" enctype="multipart/form-data" action="$getstr" method="POST">
+	<form name="sharepath" id='shareform' enctype="multipart/form-data" action="$getstr" method="POST">
 	<table cellspacing="0">
 	<tr><td></td><td colspan="2" style="padding:7px;"><b>edit shared folders</b></td></tr>
 	<tr><td></td><td class="leftcell">name</td>
@@ -210,8 +322,18 @@ END;
 $shareHTML .= <<<END
 
 	<tr><td style="padding:7px;"> add:<br>&nbsp;</td>
-	<td class="leftcell">name:<br><input type="text" name="realm$i" value="" /></td>
-	<td class="rightcell">path:<br><input style="width:300px;" type="text" name="path$i" value="" /></td></tr>
+	<td  class="leftcell"><input type="hidden" name="realm$i" value="" />&nbsp;&nbsp;&nbsp;&nbsp;</td>
+		<td class="rightcell">
+			
+		<a href="#" id="button$i" onclick="dialog_choseName($i);" style="color:#444444;">
+		<div style='padding:3px; width:550px; background:#eeeeee;'><div id="displaypath$i">&nbsp;&nbsp;&nbsp;
+		<div style='padding:3px; border:1px solid #555555; border-top:0px; padding-top:2px; float:right;  background:#ffffff;'>Browse...</div>
+		</div>
+		<input type="hidden" id="path$i" name="path$i" value="" />
+		</div> 
+		</a>
+				
+		</td></tr>
 	
 	<tr><td></td><td colspan="2" style="padding:7px; text-align:right;"><input type="submit" value="Update Shared Folders" /></td></tr>
 	</table>

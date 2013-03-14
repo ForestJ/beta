@@ -15,9 +15,10 @@ then
 		COUNT=`sudo lsof -i -n -P | grep LISTEN | egrep ':80|:443' | wc -l`;
 	done
 
-	sudo /Applications/XAMPP/xamppfiles/xampp startapache
-	sudo /Applications/XAMPP/xamppfiles/xampp startmysql
 fi
+
+sudo /Applications/XAMPP/xamppfiles/xampp startapache
+sudo /Applications/XAMPP/xamppfiles/xampp startmysql
 
 echo "         "
 echo "   "
