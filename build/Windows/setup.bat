@@ -162,6 +162,8 @@ xcopy "%RESULT%" "C:\xampp\htdocs\build\Mac\" /s /e /c /h > nul
 CALL :RESOLVE "%CD%\..\Windows" RESULT
 xcopy "%RESULT%" "C:\xampp\htdocs\build\Windows\" /s /e /c /h > nul
 
+echo Installing autostarter...
+
 copy "%CD%\data\xamppstart.bat" "C:\Documents and Settings\All Users\Start Menu\Programs\Startup\" > nul
 
 echo .

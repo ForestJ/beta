@@ -55,7 +55,7 @@ $winContentSimple = <<<END
 	</ul>
 </li>
 
-<li><p><span class="hotitem">#3 after it installs, run "setup.bat"</span></p>
+<li><p><span class="hotitem">#2 after it installs, run "setup.bat"</span></p>
 
 	<ul>
 	<p>if setup.bat runs into problems, email belnetstatus@gmail.com with a screenshot of the console window</p>
@@ -84,7 +84,7 @@ $macContentSimple = <<<END
 </ul>
 </li>
 
-<li><p><span class="hotitem">#3 run the Setup application</p></span>
+<li><p><span class="hotitem">#2 run the Setup application</p></span>
 	
 	<ul><li><p>if Setup runs into problems, email belnetstatus@gmail.com with a screenshot of the terminal window</p></li></ul>
 
