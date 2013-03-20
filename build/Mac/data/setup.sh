@@ -223,7 +223,7 @@ then
 	echo "giving www permissions..."
 
 	sudo chown -R $PERMUSER:www "/Applications/XAMPP/xamppfiles/htdocs/"
-	sudo chmod -R 750 "/Applications/XAMPP/xamppfiles/htdocs/"
+	sudo chmod -R 770 "/Applications/XAMPP/xamppfiles/htdocs/"
 
 	#sudo chgrp www "/Applications/XAMPP/xamppfiles/phpmyadmin/config.inc.php"
 
