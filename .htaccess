@@ -1,0 +1,10 @@
+SSLOptions +StrictRequire
+SSLRequireSSL
+# SSLRequire %{HTTP_HOST} eq "localhost" or %{HTTP_HOST} eq "ur router lan ip" or %{HTTP_HOST} eq "ur beloit lan ip" 
+# ErrorDocument 403 https://$HOME
+
+AuthType Digest
+AuthName "mesh"
+AuthUserfile ../htdocs/.htpasswd
+Require valid-user
+
