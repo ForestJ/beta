@@ -17,6 +17,7 @@ then
 
 fi
 
+sudo /Applications/XAMPP/xamppfiles/xampp enablessl
 sudo /Applications/XAMPP/xamppfiles/xampp startapache
 sudo /Applications/XAMPP/xamppfiles/xampp startmysql
 

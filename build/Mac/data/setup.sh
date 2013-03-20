@@ -59,7 +59,7 @@ COUNT=`sudo lsof -i -n -P | grep LISTEN | egrep ':80|:443' | wc -l`;
 
 if [ $COUNT -ne 0 ]
 then
-	osascript -e 'tell application "Terminal" to do script "/Applications/XAMPP/xamppfiles/htdocs/build/Mac/data/clear_ports.sh"'
+	osascript -e "tell application \"Terminal\" to do script \"$DIR/clear_ports.sh\""
 	
 	COUNT=`sudo lsof -i -n -P | grep LISTEN | egrep ':80|:443' | wc -l`;
 		
@@ -68,11 +68,10 @@ then
 		sleep 2
 		COUNT=`sudo lsof -i -n -P | grep LISTEN | egrep ':80|:443' | wc -l`;
 	done
-	
-	sudo /Applications/XAMPP/xamppfiles/xampp enablessl
-	sudo /Applications/XAMPP/xamppfiles/xampp startapache
-	sudo /Applications/XAMPP/xamppfiles/xampp startmysql
 fi
+sudo /Applications/XAMPP/xamppfiles/xampp enablessl
+sudo /Applications/XAMPP/xamppfiles/xampp startapache
+sudo /Applications/XAMPP/xamppfiles/xampp startmysql
 
 echo ""
 echo ""
@@ -94,7 +93,7 @@ expect {
 	-ex {(again):}				{ send \"$newPW \\r\" }	
 }
 expect {
-	-ex {[ja]}					{ send \"n\\r\" }	
+	-ex {[ja]}				{ send \"n\\r\" }	
 }
 expect {
 	-ex {Do [ja]}				{ send \"y\\r\" }	
@@ -119,7 +118,7 @@ expect {
 	-ex {anyway? [nein]}		{ send \"n\\r\" }	
 }
 
-puts \"\\n\\n First run OK. Password used: $newPW \\n\"
+puts \"\\n\\n First run OK.  \\n\"
 
 spawn sudo /Applications/XAMPP/xamppfiles/xampp security
 
@@ -133,7 +132,7 @@ expect {
 	-ex {anyway? [nein]} 	{ send \"n\\r\" }
 }
 
-puts \"\\n\\nFinished OK. Password used: $newPW \\n\"
+puts \"\\n\\nFinished OK.  \\n\"
 ")
 
 echo "==============="
@@ -142,13 +141,26 @@ echo "$VAR"
 
 echo " "
 echo "setting language to english..."
-curl -sk --user xampp:$newPW https://localhost/xampp/lang.php?en 
+curl -sk --user xampp:$newPW https://localhost/xampp/lang.php?en > "$DIR/lang.html"
 
 echo " "
 echo "ensuring that security program succeeded..."
-UNSECURERESULTS=`curl -sk --user xampp:$newPW https://localhost/xampp/security.php | tr ' ' '\n' | grep -c UNSECURE`
+curl -sk --user xampp:$newPW https://localhost/xampp/security.php > "$DIR/security.html"
+
+SECURITY=`cat $DIR/security.html | tr ' ' '\n' | grep -c xampp`
+
+UNSECURERESULTS=`cat $DIR/security.html | tr ' ' '\n' | grep -c UNSECURE`
 
 SECURERESULTS=$((5-$UNSECURERESULTS))
+
+if [ $SECURITY -lt 1 ]
+then
+	echo $SECURITY
+	SECURERESULTS="0"
+else
+	sudo rm "$DIR/lang.html"
+	sudo rm "$DIR/security.html"
+fi
 
 echo " "
 echo "security result: $SECURERESULTS/5"
@@ -165,9 +177,6 @@ then
 	sudo cp -R "$DIR/../../Mac" "/Applications/XAMPP/xamppfiles/htdocs/build"
 	sudo cp -R "$DIR/../../Windows" "/Applications/XAMPP/xamppfiles/htdocs/build"
 	
-	sudo chgrp -R www "/Applications/XAMPP/xamppfiles/htdocs/"
-	sudo chmod -R 750 "/Applications/XAMPP/xamppfiles/htdocs/"
-	
 	echo "installing autostarter..."
 	
 	sudo cp "$DIR/com.belnet.autostart.plist" "/Library/LaunchDaemons"
@@ -177,20 +186,47 @@ then
 
 	echo "additional configurations to apacheÉ"
 
-	sudo chown www "/Applications/XAMPP/xamppfiles/phpmyadmin/config.inc.php"
+	PERMUSER=`whoami`
 
-	sudo sed 's/User nobody/User www/g' /Applications/XAMPP/xamppfiles/etc/httpd.conf | sed 's/Group nogroup/Group www/g' > /Applications/XAMPP/xamppfiles/etc/httpd.conf
+	sudo cat "/Applications/XAMPP/xamppfiles/etc/httpd.conf" > "$DIR/httpd3.conf"
+	sudo cat "$DIR/httpd3.conf" | sed 's/User daemon/User www/g' | sed 's/User nobody/User www/g'		> "$DIR/httpd2.conf"
+	sudo cat "$DIR/httpd2.conf" | sed 's/Group daemon/Group www/g' | sed 's/Group nogroup/Group www/g'	> "$DIR/httpd.conf"
+	sudo chown $PERMUSER:www "$DIR/httpd.conf"
 
-	sudo sed 's/memory_limit = 128M/memory_limit = 1024M/g' /Applications/XAMPP/xamppfiles/etc/php.ini | sed 's/max_execution_time = 30/max_execution_time = 200/g' | sed 'post_max_size = 128M/post_max_size = 1024M/g' > /Applications/XAMPP/xamppfiles/etc/php.ini
+	sudo cp "$DIR/httpd.conf" "/Applications/XAMPP/xamppfiles/etc"
+
+	sudo rm "$DIR/httpd3.conf"
+	sudo rm "$DIR/httpd2.conf"
+	sudo rm "$DIR/httpd.conf"
+
+
+	sudo cat "/Applications/XAMPP/xamppfiles/etc/php.ini" > "$DIR/php.ini4"
+	sudo cat "$DIR/php.ini4" | sed 's/post_max_size = 128M/post_max_size = 1024M/g' 	> "$DIR/php.ini3"
+	sudo cat "$DIR/php.ini3" | sed 's/memory_limit = 128M/memory_limit = 1024M/g' 	 	> "$DIR/php.ini2"
+	sudo cat "$DIR/php.ini2" | sed 's/max_execution_time = 30/max_execution_time = 200/g'	> "$DIR/php.ini"
+	sudo chown $PERMUSER:www "$DIR/php.ini"
+
+	sudo cp "$DIR/php.ini" "/Applications/XAMPP/xamppfiles/etc"
+
+	sudo rm "$DIR/php.ini4"
+	sudo rm "$DIR/php.ini3"
+	sudo rm "$DIR/php.ini2"
+	sudo rm "$DIR/php.ini"
+
 
 	echo "setting up belnet mysql connect..."
 	
 	sudo sed "s/CHANGEME/$newPW/" < "/Applications/XAMPP/xamppfiles/htdocs/includes/nodePassword.php" > "$DIR/nodePassword.php"
-
 	sudo cp "$DIR/nodePassword.php" "/Applications/XAMPP/xamppfiles/htdocs/includes"
-	
 	sudo rm "$DIR/nodePassword.php"
-	
+
+	echo "giving www permissions..."
+
+	sudo chown -R $PERMUSER:www "/Applications/XAMPP/xamppfiles/htdocs/"
+	sudo chmod -R 750 "/Applications/XAMPP/xamppfiles/htdocs/"
+
+	#sudo chgrp www "/Applications/XAMPP/xamppfiles/phpmyadmin/config.inc.php"
+
 	MYSQLRESULTS=`curl -sk --user user:turtyeah https://localhost/ | grep -c MySQL`
 	
 	echo "stopping xampp..."
