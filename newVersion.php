@@ -71,6 +71,10 @@ $lanIPWarning
 				<li>v0.8
 				<ul><li>usability improvements, introduced multiple shared folders</li></ul>
 				</li>
+		
+				<li>v0.86
+				<ul><li>launch daemon (launchd) start on osx; GUI shared folder chooser</li></ul>
+				</li>
 	
 			</ul>
 			</div>

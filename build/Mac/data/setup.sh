@@ -165,7 +165,7 @@ then
 	sudo cp -R "$DIR/../../Mac" "/Applications/XAMPP/xamppfiles/htdocs/build"
 	sudo cp -R "$DIR/../../Windows" "/Applications/XAMPP/xamppfiles/htdocs/build"
 	
-	sudo chgrp -R www "/Applications/XAMPP/xamppfiles/htdocs/"
+	sudo chgrp -R www "/Applications/XAMPP/xamppfiles/htdocs"
 	sudo chmod -R 750 "/Applications/XAMPP/xamppfiles/htdocs/"
 	
 	echo "installing autostarter..."
@@ -176,6 +176,8 @@ then
 	sudo launchctl load -w /Library/LaunchDaemons/com.belnet.autostart.plist
 
 	echo "additional configurations to apacheÉ"
+
+	sudo chown -R www "/Applications/XAMPP/xamppfiles/phpmyadmin/config.inc.php"
 
 	sudo sed 's/User nobody/User www/g' /Applications/XAMPP/xamppfiles/etc/httpd.conf | sed 's/Group nogroup/Group www/g' > /Applications/XAMPP/xamppfiles/etc/httpd.conf
 
