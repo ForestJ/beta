@@ -20,20 +20,6 @@ echo ^|              P^^YbmdP'   `Mbmmd'.JMML..JMML  JMML.`Mbmmd'  `Mbmo
 echo ^|     	 
 
 
-netstat -a -o -n > C:\xampp\netstat.txt
-
-tasklist > C:\xampp\tasklist.txt
-
-cscript /nologo htdocs\build\Windows\data\processFinder.vbs "(?=.*LISTENING)(?=.*(:80|:443))" "(\d{1,5})$" "(^[a-z0-9\.]*) *(\d*)" "C:\xampp\netstat.txt" "C:\xampp\tasklist.txt" > C:\xampp\optionaltaskkill.bat
-
-call C:\xampp\optionaltaskkill.bat
-
-DEL C:\xampp\netstat.txt
-DEL C:\xampp\tasklist.txt
-DEL C:\xampp\optionaltaskkill.bat
-
-ping -n 2 127.0.0.1 > nul
-
 echo ^|             .                    .                                    
 echo ^|         ,-. ^|  ,-. ,-. ,-. ,-.   ^|  ,-. ,-. .  , ,-.   ,-. ,-. ,-. ,-.
 echo ^|         ^| ^| ^|  ^|-' ,-^| `-. ^|-'   ^|  ^|-' ,-^| ^| /  ^|-'   ^| ^| ^| ^| ^|-' ^| ^|

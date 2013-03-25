@@ -1,6 +1,15 @@
 <?php
 include_once($_SERVER['DOCUMENT_ROOT'].'/includes/databaseConnection.php');
 
+$userNetwork = "release";
+$query = 'SELECT * FROM user';
+$result = mysql_query($query) or die('Query failed: ' . mysql_error());
+$line = mysql_fetch_array($result, MYSQL_ASSOC);
+if($line != false) $userNetwork = $line['network'];
+
+$network = isset($_GET['network']) ? $_GET['network'] : "";
+if($network != "" && $userNetwork != $network) exit(0);
+
 $add = isset($_GET['add']) ? $_GET['add'] : "";
 
 $query = "SELECT * FROM `bfs`.`ips` WHERE `ips`.`ip` = '" . $add . "';";

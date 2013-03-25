@@ -1,5 +1,15 @@
 <?php
 include ($_SERVER['DOCUMENT_ROOT'].'/includes/includedFunctions.php');
+
+$userNetwork = "release";
+$query = 'SELECT * FROM user';
+$result = mysql_query($query) or die('Query failed: ' . mysql_error());
+$line = mysql_fetch_array($result, MYSQL_ASSOC);
+if($line != false) $userNetwork = $line['network'];
+
+$network = isset($_GET['network']) ? $_GET['network'] : "";
+if($network != "" && $userNetwork != $network) exit(0);
+
 $lanIP = isset($_GET['lan']) ? $_GET['lan'] : "";
 $lanConnect = implode_curl_multi_with_null(">", array("https://".$lanIP."/test.php", "https://".$_SERVER['REMOTE_ADDR']."/test.php"));
 $conArr = explode(">", $lanConnect);

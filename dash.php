@@ -40,6 +40,11 @@ $adminDash = <<<END
 </div> 
 END;
 }
+$developmentModeText = "";
+if($network == "development") {
+	$developmentModeText = "<div style='padding:6px; background:url(img/development_mode.jpg)'> "
+			. "<span style='padding:3px; font-weight:bold; background:#122530; color:#ffbb80;'>Development Mode Activated - Using Test Network</span></div> ";
+}
 
 $rightContent .= "<table>";
 foreach($nodes as $node) {
@@ -121,7 +126,7 @@ END;
 $pgBody .= <<<END
 
 <!--HEADER-->
-<div style="background:#a674f4; border-bottom:1px solid #452775; color:#ffffff; font-size:18px; padding:5px; padding-bottom:7px; padding-top:7px;">
+<div style="background:#9359fa; border-bottom:1px solid #452775; color:#ffffff; font-size:18px; padding:5px; padding-bottom:7px; padding-top:7px;">
 <!--SEARCH-->
 <div style="position:absolute; top:0px left:0px; width:70%; text-align:center; font-size:14px; padding-top:3px">
 	<a href="/?t=about&m=install" style="font-weight:bold; color:#ffffff;"> install now!</a>
@@ -137,6 +142,9 @@ $pgBody .= <<<END
 <div style="display:inline;"><b>$title</b> <span style="font-size:12px;">v$version</span></div> 
 <div style="display:inline; float:right; text-align:right; padding-top:3px; font-size:15px;">node info: $userip <b>``$user``</b> ($userid)</div> 
 </div>
+
+$developmentModeText
+
 <div style="background:#f6ff72; border-bottom:1px solid #bbbbbb; border-top:1px solid #727630; color:#555555; font-size:14px; min-height:6px;">
 $adminDash
 </div>

@@ -34,6 +34,7 @@ $pgTitle = $title;
 $pgHead = "";
 $pgBody = "";
 $pgFoot = "";
+$userNetwork = "release";
 $recentUpdate = "first";
 
 
@@ -46,6 +47,7 @@ if($line != false) {
 	$user = $line['name'];
 	$userip = $line['ip'];
 	$dbversion = $line['version'];
+	$userNetwork = $line['network'];
 	$lastNetCheck = $line['time'];
 	$recentUpdate = $line['updated'];
 	

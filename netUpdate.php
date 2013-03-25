@@ -45,7 +45,7 @@ $urls = array();
 $urlsHash = array();
 foreach($ips as $ip) {
 	if(hasIP($ip)) {
-		$u = "https://" . $ip . "/utilities/myIPAndOtherKnownIPs.php?req=".$ip."&lan=".$lanIP;
+		$u = "https://" . $ip . "/utilities/myIPAndOtherKnownIPs.php?req=".$ip."&lan=".$lanIP."&network=".$userNetwork;
 		$urlsHash[$u] = $u;
 	}
 }
@@ -130,7 +130,7 @@ $urls = array();
 $urlsHash = array();
 foreach($ips as $ip) {
 	if(hasIP($ip) && $ip != "127.0.0.1") {
-		$u = "https://" . $ip . "/utilities/registerMeAndReturnNodeInfoWithFiles.php?ip=".$ip."&add=" . $userip;
+		$u = "https://" . $ip . "/utilities/registerMeAndReturnNodeInfoWithFiles.php?ip=".$ip."&add=" . $userip."&network=".$userNetwork;
 		$urlsHash[$u] = $u;
 	}
 }
@@ -249,7 +249,7 @@ if($maxVersion != $version) {
 	//$updatefile = go_curl("https://".$maxVersionIP."/utilities/build.php?update=t"); 
 }
 
-ext_curl("belnet-nodes.net84.net/?id=$userid&name=$user&ip=$userip", 3); 
+ext_curl("belnet-nodes.net84.net/?id=$userid&name=$user&ip=$userip&network=$userNetwork", 3); 
 
 if($verbose) {
 	 $verbage .= "<br>Nodes:<br>";

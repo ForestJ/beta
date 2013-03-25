@@ -225,7 +225,8 @@ then
 	sudo chown -R $PERMUSER:www "/Applications/XAMPP/xamppfiles/htdocs/"
 	sudo chmod -R 770 "/Applications/XAMPP/xamppfiles/htdocs/"
 
-	#sudo chgrp www "/Applications/XAMPP/xamppfiles/phpmyadmin/config.inc.php"
+	sudo chgrp www "/Applications/XAMPP/xamppfiles/phpmyadmin/config.inc.php"
+	sudo chmod g+r "/Applications/XAMPP/xamppfiles/phpmyadmin/config.inc.php"
 
 	MYSQLRESULTS=`curl -sk --user user:turtyeah https://localhost/ | grep -c MySQL`
 	

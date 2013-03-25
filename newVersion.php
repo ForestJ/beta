@@ -2,15 +2,14 @@
 
 //echo $version . "  " . $userid;
 
-if($dbversion != $version) {
-	$q = "UPDATE `bfs`.`user` SET `version` =  '$version' WHERE `user`.`id` = '$userid';";
-	mysql_query($q) or die('Query failed: ' . mysql_error());
-	
+if($dbversion != $version) {	
 	// set by includes/version.php
-	if($version < $lastDatabaseReboot) {
-		go_curl("https://localhost/?cleandb=t", 10);
+	if($dbversion < $lastDatabaseReboot) {
+		getDatabase("reset");
 	}
 	
+	$q = "UPDATE `bfs`.`user` SET `version` =  '$version' WHERE `user`.`id` = '$userid';";
+	mysql_query($q) or die('Query failed: ' . mysql_error());
 	$q = "UPDATE `bfs`.`user` SET `updated` =  'true' WHERE `user`.`id` = '$userid';";
 	mysql_query($q) or die('Query failed: ' . mysql_error());
 } else {
@@ -74,6 +73,10 @@ $lanIPWarning
 		
 				<li>v0.87
 				<ul><li>launch daemon (launchd) start on osx; GUI shared folder chooser</li></ul>
+				</li>
+		
+				<li>v0.91
+				<ul><li>development mode / test network</li></ul>
 				</li>
 	
 			</ul>

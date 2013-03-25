@@ -68,29 +68,40 @@ Loop
 
 if found2 = True Then
 
-	WScript.Echo "echo The following programs must be terminated before apache can start:"
-	WScript.Echo "echo ^|"
-	For Each element In myArray1
-		if not element = "" Then
-			WScript.Echo "echo - " + element
-		End If
-	Next
-
-	WScript.Echo "echo ^|"
-
-	WScript.Echo "set /p answer=May I go ahead and taskkill them? (Y/N):"
-
-	WScript.Echo "if %answer% == Y goto mycontin"
-	WScript.Echo "if %answer% == y goto mycontin"
-	WScript.Echo "if %answer% == N goto H"
-	WScript.Echo "if %answer% == n goto H"
-
-	WScript.Echo ":H"
-	WScript.Echo "echo Alright don't continue..."
-	WScript.Echo "ping -n 2 127.0.0.1 > nul"
-	WScript.Echo "exit"
-
-	WScript.Echo ":mycontin"
+	if WScript.Arguments.Item(5) == "force" Then
+		WScript.Echo "echo The following programs will be terminated "
+		WScript.Echo "to open ports 80 and 443 and allow apache to start:"
+		WScript.Echo "echo ^|"
+		For Each element In myArray1
+			if not element = "" Then
+				WScript.Echo "echo - " + element
+			End If
+		Next
+	Else 
+		WScript.Echo "echo The following programs must be terminated before apache can start:"
+		WScript.Echo "echo ^|"
+		For Each element In myArray1
+			if not element = "" Then
+				WScript.Echo "echo - " + element
+			End If
+		Next
+	
+		WScript.Echo "echo ^|"
+	
+		WScript.Echo "set /p answer=May I go ahead and taskkill them? (Y/N):"
+	
+		WScript.Echo "if %answer% == Y goto mycontin"
+		WScript.Echo "if %answer% == y goto mycontin"
+		WScript.Echo "if %answer% == N goto H"
+		WScript.Echo "if %answer% == n goto H"
+	
+		WScript.Echo ":H"
+		WScript.Echo "echo Alright don't continue..."
+		WScript.Echo "ping -n 2 127.0.0.1 > nul"
+		WScript.Echo "exit"
+	
+		WScript.Echo ":mycontin"
+	End If
 
 	For Each element In myArray
 		if not element = "" Then
