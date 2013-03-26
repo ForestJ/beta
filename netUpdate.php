@@ -46,6 +46,7 @@ $urlsHash = array();
 foreach($ips as $ip) {
 	if(hasIP($ip)) {
 		$u = "https://" . $ip . "/utilities/myIPAndOtherKnownIPs.php?req=".$ip."&lan=".$lanIP."&network=".$userNetwork;
+		if($verbose)  $verbage .= $u ."<br>";
 		$urlsHash[$u] = $u;
 	}
 }

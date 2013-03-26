@@ -68,9 +68,9 @@ Loop
 
 if found2 = True Then
 
-	if WScript.Arguments.Item(5) == "force" Then
+	if WScript.Arguments.Item(5) = "force" Then
 		WScript.Echo "echo The following programs will be terminated "
-		WScript.Echo "to open ports 80 and 443 and allow apache to start:"
+		WScript.Echo "echo to open ports 80 and 443 and allow apache to start:"
 		WScript.Echo "echo ^|"
 		For Each element In myArray1
 			if not element = "" Then

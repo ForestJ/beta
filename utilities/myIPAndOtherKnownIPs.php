@@ -1,5 +1,6 @@
 <?php
-include ($_SERVER['DOCUMENT_ROOT'].'/includes/includedFunctions.php');
+include_once ($_SERVER['DOCUMENT_ROOT'].'/includes/includedFunctions.php');
+include_once ($_SERVER['DOCUMENT_ROOT'].'/includes/databaseConnection.php');
 
 $userNetwork = "release";
 $query = 'SELECT * FROM user';

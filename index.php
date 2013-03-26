@@ -48,6 +48,7 @@ if($line != false) {
 	$userip = $line['ip'];
 	$dbversion = $line['version'];
 	$userNetwork = $line['network'];
+	$verbose = $userNetwork == "development";
 	$lastNetCheck = $line['time'];
 	$recentUpdate = $line['updated'];
 	
